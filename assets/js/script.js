@@ -40,6 +40,123 @@ const skillBars = document.querySelectorAll(".skill-progress");
 // Tous les éléments à animer à l'apparition
 const revealElements = document.querySelectorAll(".reveal");
 
+// Carousel 3D
+const carousel = document.getElementById("carousel");
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+const closeBtn = document.getElementById("closeBtn");
+
+/* ═══════════════════════════════════════════════════════════════
+   0. CAROUSEL 3D — initialisation
+   Crée les cartes du carousel et gère la rotation 3D
+═══════════════════════════════════════════════════════════════ */
+
+const numCards = 6;
+const angleStep = 360 / numCards;
+const radius = 180;
+
+const items = [
+  { src: "https://iili.io/3MFDjiG.jpg", caption: "" },
+  { src: "https://iili.io/3MFDNff.jpg", caption: "" },
+  { src: "https://iili.io/3MFDOl4.jpg", caption: "" },
+  { src: "https://iili.io/3MFDhVs.jpg", caption: "" },
+  { src: "https://iili.io/3MFD4Wu.jpg", caption: "" },
+  { src: "https://iili.io/3MFDrxe.jpg", caption: "" }
+];
+
+let currentRotation = 0;
+let rotationInterval = null;
+
+if (carousel) {
+  // Créer les cartes du carousel
+  items.forEach((item, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.transform = `rotateX(${i * angleStep}deg) translateZ(${radius}px)`;
+    card.style.backgroundImage = `url('${item.src}')`;
+    card.addEventListener("click", () => openLightbox(item.src));
+
+    const caption = document.createElement("div");
+    caption.className = "caption";
+    caption.innerText = item.caption;
+    card.appendChild(caption);
+
+    carousel.appendChild(card);
+  });
+
+  // Auto rotation au chargement
+  rotationInterval = setInterval(() => {
+    currentRotation += angleStep;
+    carousel.style.transform = `rotateX(${currentRotation}deg)`;
+  }, 3000);
+
+  // Arrêter la rotation au survol
+  carousel.addEventListener("mouseover", () => {
+    if (rotationInterval) clearInterval(rotationInterval);
+  });
+
+  // Reprendre la rotation en sortant
+  carousel.addEventListener("mouseout", () => {
+    rotationInterval = setInterval(() => {
+      currentRotation += angleStep;
+      carousel.style.transform = `rotateX(${currentRotation}deg)`;
+    }, 3000);
+  });
+
+  // Rotation à la souris
+  let startY;
+  document.addEventListener("mousedown", (e) => {
+    startY = e.clientY;
+    document.onmousemove = (e) => {
+      const deltaY = e.clientY - startY;
+      startY = e.clientY;
+      currentRotation += deltaY * 0.5;
+      carousel.style.transform = `rotateX(${currentRotation}deg)`;
+    };
+    document.onmouseup = () => {
+      document.onmousemove = null;
+      document.onmouseup = null;
+    };
+  });
+
+  // Rotation au touch (mobile)
+  document.addEventListener("touchstart", (e) => {
+    startY = e.touches[0].clientY;
+  });
+
+  document.addEventListener("touchmove", (e) => {
+    const deltaY = e.touches[0].clientY - startY;
+    startY = e.touches[0].clientY;
+    currentRotation += deltaY * 0.5;
+    carousel.style.transform = `rotateX(${currentRotation}deg)`;
+  });
+}
+
+/* ─── LIGHTBOX ─── */
+function openLightbox(src) {
+  if (lightboxImg && lightbox) {
+    lightboxImg.src = src;
+    lightbox.classList.add("active");
+  }
+}
+
+function closeLightbox() {
+  if (lightbox && lightboxImg) {
+    lightbox.classList.remove("active");
+    setTimeout(() => {
+      lightboxImg.src = "";
+    }, 300);
+  }
+}
+
+if (lightbox && closeBtn) {
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox || e.target === closeBtn) {
+      closeLightbox();
+    }
+  });
+}
+
 /* ═══════════════════════════════════════════════════════════════
    2. NAVIGATION
 ═══════════════════════════════════════════════════════════════ */

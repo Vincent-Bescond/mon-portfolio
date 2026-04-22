@@ -97,23 +97,20 @@
         </p>
 
         <!-- Boutons d'action -->
-        <div class="hero-buttons">
-          <a href="#projects" class="btn btn-primary">Voir mes projets</a>
-          <a href="#contact" class="btn btn-outline"> Me contacter</a>
+        <div class="carousel-wrapper">
+          <div class="carousel" id="carousel"></div>
         </div>
-      </div>
 
-      <div class="hero-image">
-        <!--
-      Remplacez src par votre propre photo.
-      En attendant, picsum.photos génère une belle photo aléatoire.
-      La taille 400x400 est recommandée pour une photo de profil.
-      -->
-        <img
-          src="https://picsum.photos/400/400?random=1"
-          alt="Photo de [votre prénom]"
-          class="profile-photo"
-        />
+        <!-- LIGHTBOX -->
+        <div class="lightbox-overlay" id="lightbox">
+          <span class="close-btn" id="closeBtn">&times;</span>
+          <img
+            class="lightbox-img"
+            id="lightboxImg"
+            src=""
+            alt="Vergrote afbeelding"
+          />
+        </div>
       </div>
     </section>
 
