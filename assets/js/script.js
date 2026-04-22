@@ -121,10 +121,10 @@ if (backToTop) {
 let skillsAnimated = false; // on n'anime qu'une seule fois
 
 function animateSkillBars() {
-  // Si déjà animé, on ne fait rien
-  if (skillsAnimated) return;
-
   skillBars.forEach((bar) => {
+    // Si cette barre a déjà été animée, on passe à la suivante
+    if (bar.classList.contains("animated")) return;
+
     const rect = bar.getBoundingClientRect();
     // rect.top < window.innerHeight = la barre est visible dans l'écran
     if (rect.top < window.innerHeight - 50) {
@@ -132,7 +132,8 @@ function animateSkillBars() {
       const level = bar.getAttribute("data-level");
       // On change la largeur = la barre s'anime grâce à la transition CSS
       bar.style.width = level + "%";
-      skillsAnimated = true;
+      // Marquer CETTE barre comme animée (pas toutes les barres !)
+      bar.classList.add("animated");
     }
   });
 }
